@@ -17,10 +17,10 @@ public class EurekaServiceApplication {
     @Bean
     @Profile("docker-aws")
     public EurekaInstanceConfigBean eurekaInstanceConfig(InetUtils inetUtils) {
-        EurekaInstanceConfigBean b = new EurekaInstanceConfigBean(inetUtils);
+        EurekaInstanceConfigBean config = new EurekaInstanceConfigBean(inetUtils);
         AmazonInfo info = AmazonInfo.Builder.newBuilder().autoBuild("eureka");
-        b.setDataCenterInfo(info);
-        return b;
+        config.setDataCenterInfo(info);
+        return config;
     }
 
     public static void main(String[] args) {
