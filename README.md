@@ -15,31 +15,25 @@ This will execute all the checks and tests.
 mvn clean spring-boot:run
 ```
 
-## Docker integration
-TO BE DONE
-
-*Dockerization should be implemented with conjunction of the config server, as it seems currently both services would need EIPs to function normally in AWS.*
-
-## Notes on AWS
-EIP self association will work only if the service is running on instances with the following IAM role:
+## Create local docker image
 ```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "Stmt1471561180000",
-            "Effect": "Allow",
-            "Action": [
-                "ec2:AssociateAddress",
-                "ec2:DescribeNetworkInterfaces",
-                "ec2:DisassociateAddress",
-                "ec2:DescribeAddresses",
-                "ec2:DescribeInstances"
-            ],
-            "Resource": [
-                "*"
-            ]
-        }
-    ]
-}
+mvn clean install docker:build
+```
+The new docker image will be pushed to the local image repository named  `microservicesteam/nutaxi-route-service` labelled with `${project.version}` and `latest` tags.
+
+Note that the docker plugin is not bound to any lifecycle events, therefore it should be executed alongside with `package` or `install` goals.
+
+The created image will execute the application with `default` profile. In case you would like to use another profile, use `-Ddocker-spring-profile=<profile>` parameter as below:
+
+```
+mvn clean install docker:build -Ddocker-spring-profile=docker-aws
+```
+
+## Publish docker image to remote repository
+```
+mvn clean install docker:build -DpushImageTag
+```
+Note that you have to logged in to push images to the remote repository using
+```
+docker login
 ```
